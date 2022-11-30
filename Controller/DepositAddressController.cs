@@ -2,9 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Text;
 using System.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using CryptoApi.Models;
+using Newtonsoft.Json;
+using DotNetEnv;
 
 namespace CryptoApi.Controller{
     [Route("api/[controller]")]
@@ -18,14 +21,20 @@ namespace CryptoApi.Controller{
         }
 
         [HttpPost]
-        public ActionResult GetDiemdanh(Address address){
-
-            string url = "https://rest.cryptoapis.io";
-            // var authenticationString = $"{identifer}:{key}";
-            // var base64EncodedAuthenticationString = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(authenticationString));
-            // _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("basic",base64EncodedAuthenticationString);
-            // _http.DefaultRequestHeaders.Add("X-Crisp-Tier","plugin");
-            return null;                          
+        public async Task<ActionResult> CreateAddress(Address address){
+            Env.Load();
+            var walletid = Environment.GetEnvironmentVariable("walletId");
+            var blockchain = Environment.GetEnvironmentVariable("blockchain");
+            var network = Environment.GetEnvironmentVariable("network");
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+blockchain+"/"+network+"/addresses";
+            _http.DefaultRequestHeaders.Add("X-API-Key","5d2c558abdfeb4afae435477ed6c423e758a2895");
+            string data = JsonConvert.SerializeObject(address);
+            HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
+            httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
+            var responseString = await httpResponse.Content.ReadAsStringAsync();
+            Console.WriteLine(responseString);
+            return Ok(responseString);                          
         }
     }
 }

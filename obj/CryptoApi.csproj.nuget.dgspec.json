@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\duantailieuCNTT\\CryptoApi\\CryptoApi.csproj": {}
+    "E:\\CryptoApi\\CryptoApi.csproj": {}
   },
   "projects": {
-    "D:\\duantailieuCNTT\\CryptoApi\\CryptoApi.csproj": {
+    "E:\\CryptoApi\\CryptoApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\duantailieuCNTT\\CryptoApi\\CryptoApi.csproj",
+        "projectUniqueName": "E:\\CryptoApi\\CryptoApi.csproj",
         "projectName": "CryptoApi",
-        "projectPath": "D:\\duantailieuCNTT\\CryptoApi\\CryptoApi.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\duantailieuCNTT\\CryptoApi\\obj\\",
+        "projectPath": "E:\\CryptoApi\\CryptoApi.csproj",
+        "packagesPath": "C:\\Users\\HoangQuan\\.nuget\\packages\\",
+        "outputPath": "E:\\CryptoApi\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\HoangQuan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,6 +48,10 @@
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
               "version": "[12.0.0, )"
+            },
+            "DotNetEnv": {
+              "target": "Package",
+              "version": "[2.3.0, )"
             },
             "Microsoft.AspNet.WebApi.Core": {
               "target": "Package",
