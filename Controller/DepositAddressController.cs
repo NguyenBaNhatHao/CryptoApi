@@ -26,8 +26,9 @@ namespace CryptoApi.Controller{
             var walletid = Environment.GetEnvironmentVariable("walletId");
             var blockchain = Environment.GetEnvironmentVariable("blockchain");
             var network = Environment.GetEnvironmentVariable("network");
+            var ApiKey = Environment.GetEnvironmentVariable("ApiKey");
             string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+blockchain+"/"+network+"/addresses";
-            _http.DefaultRequestHeaders.Add("X-API-Key","5d2c558abdfeb4afae435477ed6c423e758a2895");
+            _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(address);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
