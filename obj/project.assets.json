@@ -5993,24 +5993,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\HoangQuan\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\CryptoApi\\CryptoApi.csproj",
+      "projectUniqueName": "D:\\duantailieuCNTT\\CryptoApi\\CryptoApi.csproj",
       "projectName": "CryptoApi",
-      "projectPath": "E:\\CryptoApi\\CryptoApi.csproj",
-      "packagesPath": "C:\\Users\\HoangQuan\\.nuget\\packages\\",
-      "outputPath": "E:\\CryptoApi\\obj\\",
+      "projectPath": "D:\\duantailieuCNTT\\CryptoApi\\CryptoApi.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "D:\\duantailieuCNTT\\CryptoApi\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\HoangQuan\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6018,7 +6013,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using CryptoApi.Models;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using DotNetEnv;
 
@@ -36,6 +37,24 @@ namespace CryptoApi.Controller{
             var responseString = await httpResponse.Content.ReadAsStringAsync();
             Console.WriteLine(responseString);
             return Ok(responseString);                          
+        }
+        [HttpPost("sendcoin")]
+        public async Task<ActionResult> SendCoin ([FromBody]SendCoin sendCoin){
+            Env.Load();
+            var walletid = Environment.GetEnvironmentVariable("walletId");
+            var blockchain = Environment.GetEnvironmentVariable("blockchain");
+            var network = Environment.GetEnvironmentVariable("network");
+            var ApiKey = Environment.GetEnvironmentVariable("ApiKey");
+            var address = Environment.GetEnvironmentVariable("address");
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+blockchain+"/"+network+"/addresses/"+address+"/feeless-transaction-requests";
+            _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
+            string data = JsonConvert.SerializeObject(sendCoin);
+            HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
+            httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
+            var responseString = await httpResponse.Content.ReadAsStringAsync();
+            Console.WriteLine(responseString);
+            return Ok(responseString);              
         }
     }
 }
