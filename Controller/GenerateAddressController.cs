@@ -13,22 +13,19 @@ using DotNetEnv;
 namespace CryptoApi.Controller{
     [Route("api/[controller]")]
     [ApiController]
-    public class DepositAddressController : ControllerBase{
+    public class GenerateAddressController : ControllerBase{
 
         public readonly HttpClient _http;
 
-        public DepositAddressController(HttpClient http){
+        public GenerateAddressController(HttpClient http){
             _http = http;
         }
 
         [HttpPost]
         public async Task<ActionResult> CreateAddress(Address address){
             Env.Load();
-            var walletid = Environment.GetEnvironmentVariable("walletId");
-            var blockchain = Environment.GetEnvironmentVariable("blockchain");
-            var network = Environment.GetEnvironmentVariable("network");
             var ApiKey = Environment.GetEnvironmentVariable("ApiKey");
-            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+blockchain+"/"+network+"/addresses";
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+address.walletid+"/"+address.blockchain+"/"+address.network+"/addresses";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(address);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
