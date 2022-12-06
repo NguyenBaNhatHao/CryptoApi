@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 namespace CryptoApi.Dtos{
     public class SendCoinDTO{
         public string? context {get; set;}
@@ -8,12 +10,16 @@ namespace CryptoApi.Dtos{
         public DataSendCoin data {get; set;}
         
     }
+    [Keyless]
+    [NotMapped]
     public class DataSendCoin {
-            public ItemSendCoin item{ get; set;}
-        }
-        public class ItemSendCoin {
-            public string? amount{get; set;}
-            public string note {get; set;}
-            public string? recipientAddress {get; set;}
-        }
+        public ItemSendCoin item{ get; set;}
+    }
+    [Keyless]
+    [NotMapped]
+    public class ItemSendCoin {
+        public string? amount{get; set;}
+        public string note {get; set;}
+        public string? recipientAddress {get; set;}
+    }
 }

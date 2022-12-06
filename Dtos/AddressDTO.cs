@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 namespace CryptoApi.Dtos{
     public class AddressDTO{
         public string? context {get; set;}
@@ -7,10 +9,16 @@ namespace CryptoApi.Dtos{
         public Data data {get;set;}
         
     }
+    [Keyless]
+    [NotMapped]
     public class Data{
-            public Item item {get; set;}
-        }
-        public class Item{
-            public string? label {get; set;}
-        }
+        
+        public Item item {get; set;}
+    }
+    [Keyless]
+    [NotMapped]
+    public class Item{
+        
+        public string? label {get; set;}
+    }
 }

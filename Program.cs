@@ -1,5 +1,13 @@
-var builder = WebApplication.CreateBuilder(args);
+using CryptoApi.Datas;
+using Microsoft.EntityFrameworkCore;
 
+using CryptoApi.Models;
+using Microsoft.Net.Http.Headers;
+using System;
+
+var builder = WebApplication.CreateBuilder(args);
+string sConnection = builder.Configuration.GetConnectionString("CryptoConnection");
+builder.Services.AddDbContext<CryptoApiDbContext>(opt => opt.UseSqlServer(sConnection));
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddHttpClient();
