@@ -1,12 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using AutoMapper;
 using System.Text;
 using System.Data;
+using CryptoApi.Profiles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using CryptoApi.Models;
 using System.Collections.Generic;
+using CryptoApi.Dtos;
 using Newtonsoft.Json;
 using DotNetEnv;
 
@@ -23,11 +26,18 @@ namespace CryptoApi.Controller{
 
         [HttpPost]
         public async Task<ActionResult> CreateAddress(Address address){
+            var config = new MapperConfiguration(cfg =>{
+                cfg.AddProfile(new CrytoApiProfile());
+            });
+            var mapper = config.CreateMapper();
+
             Env.Load();
             var ApiKey = Environment.GetEnvironmentVariable("ApiKey");
-            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+address.walletid+"/"+address.blockchain+"/"+address.network+"/addresses";
+            var addressDTO = mapper.Map<Address,AddressDTO>(address);
+            
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+addressDTO.walletid+"/"+addressDTO.blockchain+"/"+addressDTO.network+"/addresses";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
-            string data = JsonConvert.SerializeObject(address);
+            string data = JsonConvert.SerializeObject(addressDTO);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
             httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
@@ -36,14 +46,15 @@ namespace CryptoApi.Controller{
             return Ok(responseString);                          
         }
         [HttpPost("sendcoin")]
-        public async Task<ActionResult> SendCoin ([FromBody]SendCoin sendCoin){
+        public async Task<ActionResult> SendCoin (SendCoin sendCoin){
             Env.Load();
-            var walletid = Environment.GetEnvironmentVariable("walletId");
-            var blockchain = Environment.GetEnvironmentVariable("blockchain");
-            var network = Environment.GetEnvironmentVariable("network");
+            var config = new MapperConfiguration(cfg =>{
+                cfg.AddProfile(new CrytoApiProfile());
+            });
+            var mapper = config.CreateMapper();
+            var sendCoinDto = mapper.Map<SendCoin,SendCoinDTO>(sendCoin);
             var ApiKey = Environment.GetEnvironmentVariable("ApiKey");
-            var address = Environment.GetEnvironmentVariable("address");
-            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+blockchain+"/"+network+"/addresses/"+address+"/feeless-transaction-requests";
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+sendCoinDto.walletid+"/"+sendCoinDto.blockchain+"/"+sendCoinDto.network+"/addresses/"+sendCoinDto.address+"/feeless-transaction-requests";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(sendCoin);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");

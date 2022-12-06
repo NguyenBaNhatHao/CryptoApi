@@ -1,16 +1,19 @@
 namespace CryptoApi.Dtos{
     public class SendCoinDTO{
-        public string context {get; set;}
-        public Data data {get; set;}
-        public class Data {
-            public Item item{ get; set;}
-        }
-        public class Item {
-            public string amount{get; set;}
-            public string callbackSecretKey {get; set;}
-            public string callbackUrl {get; set;}
-            public string note {get; set;}
-            public string recipientAddress {get; set;}
-        }
+        public string? context {get; set;}
+        public string walletid {get; set;}
+        public string blockchain {get; set;}
+        public string network {get; set;}
+        public string address {get; set;}
+        public DataSendCoin data {get; set;}
+        
     }
+    public class DataSendCoin {
+            public ItemSendCoin item{ get; set;}
+        }
+        public class ItemSendCoin {
+            public string? amount{get; set;}
+            public string note {get; set;}
+            public string? recipientAddress {get; set;}
+        }
 }
