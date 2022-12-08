@@ -30,11 +30,6 @@ namespace CryptoApi.Controller{
             var addressBCONGODTO = mapper.Map<AddressBCONGO,AddressBCONGODTO>(address);
             string url = "http://localhost:5280/api/GenerateAddress";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
-            Address address1 = new Address();
-            address1.blockchain = address.blockchain;
-            address1.network = address.network;
-            address1.context = address.data.Item.email;
-            address1.data.item.label = address.data.Item.email;
             
             string data = JsonConvert.SerializeObject(addressBCONGODTO);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
