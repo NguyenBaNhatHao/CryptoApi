@@ -18,7 +18,6 @@ namespace CryptoApi.Dtos{
     [Keyless]
     [NotMapped]
     public class Item{
-        
         public string? label {get; set;}
     }
 }

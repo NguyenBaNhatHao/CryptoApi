@@ -6,7 +6,7 @@ namespace CryptoApi.Models{
         public int id {get; set;}
         public string? context {get; set;}
        
-        public string walletid {get; set;}
+        public string? walletid {get; set;}
        
         public string blockchain {get; set;}
         

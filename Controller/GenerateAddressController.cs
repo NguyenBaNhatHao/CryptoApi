@@ -1,29 +1,28 @@
-using Microsoft.EntityFrameworkCore;
 using System.Net;
 using AutoMapper;
 using System.Text;
-using System.Data;
 using CryptoApi.Profiles;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Headers;
 using CryptoApi.Models;
-using System.Collections.Generic;
 using CryptoApi.Dtos;
+using Microsoft.Extensions.Configuration;
 using CryptoApi.Datas;
 using Newtonsoft.Json;
 using DotNetEnv;
 
-namespace CryptoApi.Controller{
+namespace CryptoApi.Controller
+{
     [Route("api/[controller]")]
     [ApiController]
     public class GenerateAddressController : ControllerBase{
         public readonly CryptoApiDbContext _context;
         public readonly HttpClient _http;
+        private readonly IConfiguration _configuration;
 
-        public GenerateAddressController(HttpClient http, CryptoApiDbContext context){
+        public GenerateAddressController(HttpClient http, CryptoApiDbContext context,IConfiguration configuration){
             _http = http;
             _context = context;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -32,11 +31,11 @@ namespace CryptoApi.Controller{
                 cfg.AddProfile(new CrytoApiProfile());
             });
             var mapper = config.CreateMapper();
-            Env.Load();
             
-            var ApiKey = Environment.GetEnvironmentVariable("ApiKey");
+            var ApiKey = _configuration.GetValue<string>("ApiKey");
+            var walletid = _configuration.GetValue<string>("walletid");
             var addressDTO = mapper.Map<Address,AddressDTO>(address);
-            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+addressDTO.walletid+"/"+addressDTO.blockchain+"/"+addressDTO.network+"/addresses";
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+addressDTO.blockchain+"/"+addressDTO.network+"/addresses";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(addressDTO);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
@@ -45,6 +44,7 @@ namespace CryptoApi.Controller{
             var sc = HttpStatusCode.OK;
             if(httpResponse.StatusCode == sc){
                 address.label = addressDTO.data.item.label;
+                address.walletid = walletid;
                 _context.AddressCrypto.Add(address);
                 _context.SaveChanges();
             }
@@ -52,6 +52,7 @@ namespace CryptoApi.Controller{
             Console.WriteLine(responseString);
             return Ok(responseString);                          
         }
+
         [HttpPost("sendcoin")]
         public async Task<ActionResult> SendCoin (SendCoin sendCoin){
             Env.Load();
