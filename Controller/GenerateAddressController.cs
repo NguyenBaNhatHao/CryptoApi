@@ -34,7 +34,7 @@ namespace CryptoApi.Controller
             
             var ApiKey = _configuration.GetValue<string>("ApiKey");
             var walletid = _configuration.GetValue<string>("walletid");
-            var addressDTO = mapper.Map<Address,AddressDTO>(address);
+            var addressDTO = mapper.Map<AddressParameter,AddressDTO>(address);
             string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+addressDTO.blockchain+"/"+addressDTO.network+"/addresses";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(addressDTO);
@@ -42,12 +42,12 @@ namespace CryptoApi.Controller
             HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
             httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
             var sc = HttpStatusCode.OK;
-            if(httpResponse.StatusCode == sc){
-                address.label = addressDTO.data.item.label;
-                address.walletid = walletid;
-                _context.AddressCrypto.Add(address);
-                _context.SaveChanges();
-            }
+            // if(httpResponse.StatusCode == sc){
+            //     address.label = addressDTO.data.item.label;
+            //     address.walletid = walletid;
+            //     _context.AddressCrypto.Add(address);
+            //     _context.SaveChanges();
+            // }
             var responseString = await httpResponse.Content.ReadAsStringAsync();
             Console.WriteLine(responseString);
             return Ok(responseString);                          
