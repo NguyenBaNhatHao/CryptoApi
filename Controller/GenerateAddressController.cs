@@ -26,7 +26,7 @@ namespace CryptoApi.Controller
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateAddress(Address address){
+        public async Task<ActionResult> CreateAddress(AddressParameter address){
             var config = new MapperConfiguration(cfg =>{
                 cfg.AddProfile(new CrytoApiProfile());
             });

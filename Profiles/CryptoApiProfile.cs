@@ -14,6 +14,11 @@ namespace CryptoApi.Profiles{
             .ForMember(dest=>dest.label, act=>act.MapFrom(src=>src.data.item.label));
             CreateMap<Address,AddressDTO>();
 
+            CreateMap<AddressParameter,AddressDTO>()
+            .ForMember(dest=>dest.blockchain, act=>act.MapFrom(src=>src.blockchain))
+            .ForMember(dest=>dest.network, act=>act.MapFrom(src=>src.network))
+            .ForMember(dest=>dest.item.label, act=>act.MapFrom(src=>src.email));
+
             CreateMap<AddressBCONGODTO, AddressBCONGO>()
             .ForMember(dest=>dest.blockchain, act=>act.MapFrom(src=>src.blockchain))
             .ForMember(dest=>dest.network, act=>act.MapFrom(src=>src.network))
