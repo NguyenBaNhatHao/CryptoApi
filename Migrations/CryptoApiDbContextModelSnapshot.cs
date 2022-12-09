@@ -21,7 +21,7 @@ namespace CryptoApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CryptoApi.Models.Address", b =>
+            modelBuilder.Entity("CryptoApi.Models.AddressParameter", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -33,17 +33,10 @@ namespace CryptoApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("context")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("label")
+                    b.Property<string>("email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("network")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("walletid")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -71,10 +64,6 @@ namespace CryptoApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("context")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("network")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -83,10 +72,6 @@ namespace CryptoApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("recipientAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("walletid")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");

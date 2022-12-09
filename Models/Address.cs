@@ -12,7 +12,5 @@ namespace CryptoApi.Models{
         
         public string network {get; set;}
         public string? label {get; set;}
-        public Data? data {get; set;} 
-        public Item? item {get; set;}
     }
 }

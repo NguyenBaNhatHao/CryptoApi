@@ -42,12 +42,11 @@ namespace CryptoApi.Controller
             HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
             httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
             var sc = HttpStatusCode.OK;
-            // if(httpResponse.StatusCode == sc){
-            //     address.label = addressDTO.data.item.label;
-            //     address.walletid = walletid;
-            //     _context.AddressCrypto.Add(address);
-            //     _context.SaveChanges();
-            // }
+            if(httpResponse.StatusCode == sc){
+                address.email = addressDTO.data.item.label;
+                _context.AddressCrypto.Add(address);
+                _context.SaveChanges();
+            }
             var responseString = await httpResponse.Content.ReadAsStringAsync();
             Console.WriteLine(responseString);
             return Ok(responseString);                          
@@ -61,10 +60,11 @@ namespace CryptoApi.Controller
             });
             var mapper = config.CreateMapper();
             var sendCoinDto = mapper.Map<SendCoin,SendCoinDTO>(sendCoin);
-            var ApiKey = Environment.GetEnvironmentVariable("ApiKey");
-            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+sendCoinDto.walletid+"/"+sendCoinDto.blockchain+"/"+sendCoinDto.network+"/addresses/"+sendCoinDto.address+"/feeless-transaction-requests";
+            var ApiKey = _configuration.GetValue<string>("ApiKey");
+            var walletid = _configuration.GetValue<string>("walletid");
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+sendCoinDto.blockchain+"/"+sendCoinDto.network+"/addresses/"+sendCoinDto.address+"/feeless-transaction-requests";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
-            string data = JsonConvert.SerializeObject(sendCoin);
+            string data = JsonConvert.SerializeObject(sendCoinDto);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
             httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299

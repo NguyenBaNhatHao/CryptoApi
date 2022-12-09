@@ -5,7 +5,7 @@ namespace CryptoApi.Datas{
         public CryptoApiDbContext(DbContextOptions<CryptoApiDbContext> opt):base(opt){
 
         }
-        public DbSet<Address> AddressCrypto{get;set;}
+        public DbSet<AddressParameter> AddressCrypto{get;set;}
         public DbSet<SendCoin> TransactionRequest { get; set; }
     }
 }

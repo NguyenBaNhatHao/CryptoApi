@@ -16,11 +16,9 @@ namespace CryptoApi.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    context = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    walletid = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     blockchain = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     network = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    label = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    email = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -33,9 +31,7 @@ namespace CryptoApi.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    context = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     amount = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    walletid = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     blockchain = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     network = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     address = table.Column<string>(type: "nvarchar(max)", nullable: false),
