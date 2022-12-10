@@ -3,6 +3,7 @@ using AutoMapper;
 using System.Text;
 using CryptoApi.Profiles;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using CryptoApi.Models;
 using CryptoApi.Dtos;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,20 @@ namespace CryptoApi.Controller
             var ApiKey = _configuration.GetValue<string>("ApiKey");
             var walletid = _configuration.GetValue<string>("walletid");
             var addressDTO = mapper.Map<AddressParameter,AddressDTO>(address);
+            using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
+                cmd.CommandText = "sp_api_GetEmail";
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                if (cmd.Connection.State != System.Data.ConnectionState.Open) cmd.Connection.Open();
+                var reader = cmd.ExecuteReader();
+                while(reader.Read()){
+                    if(addressDTO.data.item.label.Equals(reader[0].ToString())){
+                        return Ok(addressDTO);
+                    }else{
+                        continue;
+                    }
+                }
+                cmd.Connection.Close();
+            }
             string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+addressDTO.blockchain+"/"+addressDTO.network+"/addresses";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(addressDTO);
