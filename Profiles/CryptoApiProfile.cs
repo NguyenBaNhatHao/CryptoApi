@@ -8,13 +8,11 @@ namespace CryptoApi.Profiles{
             .ForMember(dest=>dest.context, act=>act.MapFrom(src=>src.context))
             .ForMember(dest=>dest.walletid, act=>act.MapFrom(src=>src.walletid))
             .ForMember(dest=>dest.blockchain, act=>act.MapFrom(src=>src.blockchain))
-            .ForMember(dest=>dest.network, act=>act.MapFrom(src=>src.network))
             .ForMember(dest=>dest.label, act=>act.MapFrom(src=>src.data.item.label));
             CreateMap<Address,AddressDTO>();
 
             CreateMap<AddressParameter,AddressDTO>()
-            .ForMember(dest=>dest.blockchain, act=>act.MapFrom(src=>src.blockchain))
-            .ForMember(dest=>dest.network, act=>act.MapFrom(src=>src.network))
+            .ForMember(dest=>dest.blockchain, act=>act.MapFrom(src=>src.currencycode))
             .ForMember(dest=>dest.data, act=>act.MapFrom(src=> new Data{ item = new Item{label = src.email}}));
 
             CreateMap<AddressBCONGODTO, AddressBCONGO>()
