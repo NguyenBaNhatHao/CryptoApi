@@ -44,6 +44,7 @@ namespace CryptoApi.Controller
             // }
             var SymbolCode = new SqlParameter("@SymbolCoin", address.currencycode);
             var addressDTO = mapper.Map<AddressParameter,AddressDTO>(address);
+            
             using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
                 cmd.CommandText = "sp_api_currencycode";
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
@@ -63,13 +64,19 @@ namespace CryptoApi.Controller
 
             
             using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
-                cmd.CommandText = "sp_api_GetEmail";
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = "select * from ResponseAddress";
+                cmd.CommandType = System.Data.CommandType.Text;
                 if (cmd.Connection.State != System.Data.ConnectionState.Open) cmd.Connection.Open();
                 var reader = cmd.ExecuteReader();
                 while(reader.Read()){
-                    if(addressDTO.data.item.label.Equals(reader[0].ToString())){
-                        return Ok(addressDTO);
+                    if(addressDTO.data.item.label.Equals(reader[2].ToString())){
+                        Address checkAddressDB = new Address();
+                        checkAddressDB.currencycode = reader[1].ToString();
+                        checkAddressDB.email = reader[2].ToString();
+                        checkAddressDB.requestId = reader[3].ToString();
+                        checkAddressDB.address = reader[4].ToString();
+                        checkAddressDB.createdTimestamp = reader[5].ToString();
+                        return Ok(checkAddressDB);
                     }else{
                         continue;
                     }
@@ -83,11 +90,6 @@ namespace CryptoApi.Controller
             HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
             httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
             var sc = HttpStatusCode.OK;
-            if(httpResponse.StatusCode == sc){
-                address.email = addressDTO.data.item.label;
-                _context.AddressCrypto.Add(address);
-                _context.SaveChanges();
-            }
             var responseString = await httpResponse.Content.ReadAsStringAsync();
             JObject jObject = JObject.Parse(responseString);
             string requestId = jObject["requestId"].Value<string>();
@@ -101,6 +103,16 @@ namespace CryptoApi.Controller
             dictionary.Add("email",email);
             var jsonData = JsonConvert.SerializeObject( dictionary, Formatting.Indented );
             Console.WriteLine(jsonData);
+            Address responseAddress = new Address();
+            responseAddress.address = addresses;
+            responseAddress.requestId = requestId;
+            responseAddress.createdTimestamp = createdTimestamp;
+            responseAddress.email = address.email;
+            responseAddress.currencycode = address.currencycode;
+            if(httpResponse.StatusCode == sc){
+                _context.ResponseAddress.Add(responseAddress);
+                _context.SaveChanges();
+            }
             return Ok(jsonData);                          
         }
 
@@ -117,19 +129,16 @@ namespace CryptoApi.Controller
             network = Listnetwork.GetValue<string>("mainnet");
             
             var SymbolCode = new SqlParameter("@SymbolCoin", address.currencycode);
-            var MainNet = new SqlParameter("@Network", network);
             var addressDTO = mapper.Map<AddressParameter,AddressDTO>(address);
             using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
                 cmd.CommandText = "sp_api_currencycode_mainnet";
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 if (cmd.Connection.State != System.Data.ConnectionState.Open) cmd.Connection.Open();
                 cmd.Parameters.Add(SymbolCode);
-                cmd.Parameters.Add(MainNet);
                 var reader = cmd.ExecuteReader();
                 while(reader.Read()){
                     if(addressDTO.blockchain.Equals(reader[2].ToString())){
                         addressDTO.blockchain = reader[1].ToString();
-                        network = reader[3].ToString();
                     }else{
                         continue;
                     }
@@ -137,21 +146,27 @@ namespace CryptoApi.Controller
                 cmd.Connection.Close();
             }
 
-            
             using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
-                cmd.CommandText = "sp_api_GetEmail";
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.CommandText = "select * from ResponseAddress";
+                cmd.CommandType = System.Data.CommandType.Text;
                 if (cmd.Connection.State != System.Data.ConnectionState.Open) cmd.Connection.Open();
                 var reader = cmd.ExecuteReader();
                 while(reader.Read()){
-                    if(addressDTO.data.item.label.Equals(reader[0].ToString())){
-                        return Ok(addressDTO);
+                    if(addressDTO.data.item.label.Equals(reader[2].ToString())){
+                        Address checkAddressDB = new Address();
+                        checkAddressDB.currencycode = reader[1].ToString();
+                        checkAddressDB.email = reader[2].ToString();
+                        checkAddressDB.requestId = reader[3].ToString();
+                        checkAddressDB.address = reader[4].ToString();
+                        checkAddressDB.createdTimestamp = reader[5].ToString();
+                        return Ok(checkAddressDB);
                     }else{
                         continue;
                     }
                 }
                 cmd.Connection.Close();
             }
+
             string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+addressDTO.blockchain+"/"+network+"/addresses";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(addressDTO);
@@ -159,11 +174,6 @@ namespace CryptoApi.Controller
             HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
             httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
             var sc = HttpStatusCode.OK;
-            if(httpResponse.StatusCode == sc){
-                address.email = addressDTO.data.item.label;
-                _context.AddressCrypto.Add(address);
-                _context.SaveChanges();
-            }
             var responseString = await httpResponse.Content.ReadAsStringAsync();
             JObject jObject = JObject.Parse(responseString);
             string requestId = jObject["requestId"].Value<string>();
@@ -177,6 +187,16 @@ namespace CryptoApi.Controller
             dictionary.Add("email",email);
             var jsonData = JsonConvert.SerializeObject( dictionary, Formatting.Indented );
             Console.WriteLine(jsonData);
+            Address responseAddress = new Address();
+            responseAddress.address = addresses;
+            responseAddress.requestId = requestId;
+            responseAddress.createdTimestamp = createdTimestamp;
+            responseAddress.email = address.email;
+            responseAddress.currencycode = address.currencycode;
+            if(httpResponse.StatusCode == sc){
+                _context.ResponseAddress.Add(responseAddress);
+                _context.SaveChanges();
+            }
             return Ok(jsonData);                          
         }
 

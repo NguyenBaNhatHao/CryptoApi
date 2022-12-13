@@ -22,23 +22,7 @@ namespace CryptoApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            
-            modelBuilder.Entity("CryptoApi.Models.Network", b =>
-                {
-                    b.Property<int>("Networkid")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NetworkName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Networkid");
-
-                    b.ToTable("Network");
-                });
-
-            
-            modelBuilder.Entity("CryptoApi.Models.SymbolCoin", b =>
+            modelBuilder.Entity("CryptoApi.Models.Address", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -46,32 +30,32 @@ namespace CryptoApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("Blockchain")
+                    b.Property<string>("address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Networkid")
-                        .HasColumnType("int");
+                    b.Property<string>("createdTimestamp")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Symbol")
+                    b.Property<string>("currencycode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("requestId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
-                    b.HasIndex("Networkid");
-
-                    b.ToTable("SymbolCoin");
+                    b.ToTable("ResponseAddress");
                 });
 
-            modelBuilder.Entity("CryptoApi.Models.SymbolCoin", b =>
-                {
-                    b.HasOne("CryptoApi.Models.Network", "Network")
-                        .WithMany()
-                        .HasForeignKey("Networkid");
-
-                    b.Navigation("Network");
-                });
+            
 #pragma warning restore 612, 618
         }
     }

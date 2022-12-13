@@ -9,5 +9,6 @@ namespace CryptoApi.Datas{
         public DbSet<SendCoin> TransactionRequest { get; set; }
         public DbSet<SymbolCoin> SymbolCoin {get; set;}
         public DbSet<Network> Network {get; set;}
+        public DbSet<Address> ResponseAddress {get; set;}
     }
 }
