@@ -4,7 +4,7 @@ namespace CryptoApi.Dtos{
     public class SendTokenDTO{
         public string blockchain {get; set;}
         public string network {get; set;}
-        public string Senderaddress {get; set;}
+        public string SenderAddress {get; set;}
         public DataSendToken data {get; set;}
         
     }
@@ -18,6 +18,8 @@ namespace CryptoApi.Dtos{
     public class ItemSendToken {
         public string? amount{get; set;}
         public string note {get; set;}
+        public string? feeLimit {get;set;}
+        public string? tokenIdentifier{get;set;}
         public string? recipientAddress {get; set;}
     }
 }
