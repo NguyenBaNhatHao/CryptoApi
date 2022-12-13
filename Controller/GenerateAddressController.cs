@@ -64,13 +64,13 @@ namespace CryptoApi.Controller
 
             
             using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
-                cmd.CommandText = "select * from ResponseAddress";
+                cmd.CommandText = "select * from ResponseAddressTestNet";
                 cmd.CommandType = System.Data.CommandType.Text;
                 if (cmd.Connection.State != System.Data.ConnectionState.Open) cmd.Connection.Open();
                 var reader = cmd.ExecuteReader();
                 while(reader.Read()){
                     if(addressDTO.data.item.label.Equals(reader[2].ToString())){
-                        Address checkAddressDB = new Address();
+                        AddressTestNet checkAddressDB = new AddressTestNet();
                         checkAddressDB.currencycode = reader[1].ToString();
                         checkAddressDB.email = reader[2].ToString();
                         checkAddressDB.requestId = reader[3].ToString();
@@ -103,14 +103,14 @@ namespace CryptoApi.Controller
             dictionary.Add("email",email);
             var jsonData = JsonConvert.SerializeObject( dictionary, Formatting.Indented );
             Console.WriteLine(jsonData);
-            Address responseAddress = new Address();
+            AddressTestNet responseAddress = new AddressTestNet();
             responseAddress.address = addresses;
             responseAddress.requestId = requestId;
             responseAddress.createdTimestamp = createdTimestamp;
             responseAddress.email = address.email;
             responseAddress.currencycode = address.currencycode;
             if(httpResponse.StatusCode == sc){
-                _context.ResponseAddress.Add(responseAddress);
+                _context.ResponseAddressTestNet.Add(responseAddress);
                 _context.SaveChanges();
             }
             return Ok(jsonData);                          
@@ -137,7 +137,7 @@ namespace CryptoApi.Controller
                 cmd.Parameters.Add(SymbolCode);
                 var reader = cmd.ExecuteReader();
                 while(reader.Read()){
-                    if(addressDTO.blockchain.Equals(reader[2].ToString())){
+                    if(addressDTO.blockchain.Equals(reader[2].ToString()) ){
                         addressDTO.blockchain = reader[1].ToString();
                     }else{
                         continue;
@@ -200,18 +200,38 @@ namespace CryptoApi.Controller
             return Ok(jsonData);                          
         }
 
-        [HttpPost("sendcoin")]
+        [HttpPost("sendcoinTestNet")]
         public async Task<ActionResult> SendCoin (SendCoin sendCoin){
             Env.Load();
             var config = new MapperConfiguration(cfg =>{
                 cfg.AddProfile(new CrytoApiProfile());
             });
+            string network="";
             var mapper = config.CreateMapper();
             var sendCoinDto = mapper.Map<SendCoin,SendCoinDTO>(sendCoin);
             var ApiKey = _configuration.GetValue<string>("ApiKey");
             var walletid = _configuration.GetValue<string>("walletid");
-            
-            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+sendCoinDto.blockchain+"/"+sendCoinDto.network+"/addresses/"+sendCoinDto.address+"/feeless-transaction-requests";
+            var defautAddress = _configuration.GetValue<string>("defautlAddress");
+            sendCoinDto.address = defautAddress;
+            var SymbolCode = new SqlParameter("@SymbolCoin", sendCoin.currencycode);
+            using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
+                cmd.CommandText = "sp_api_currencycode";
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                if (cmd.Connection.State != System.Data.ConnectionState.Open) cmd.Connection.Open();
+                cmd.Parameters.Add(SymbolCode);
+                var reader = cmd.ExecuteReader();
+                while(reader.Read()){
+                    if(sendCoinDto.blockchain.Equals(reader[2].ToString())){
+                        sendCoinDto.blockchain = reader[1].ToString();
+                        network = reader[3].ToString();
+                    }else{
+                        continue;
+                    }
+                }
+                cmd.Connection.Close();
+            }
+
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+sendCoinDto.blockchain+"/"+network+"/addresses/"+sendCoinDto.address+"/feeless-transaction-requests";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(sendCoinDto);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");

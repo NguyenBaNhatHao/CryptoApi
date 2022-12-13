@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoApi.Migrations
 {
     [DbContext(typeof(CryptoApiDbContext))]
-    [Migration("20221213024038_Initial")]
+    [Migration("20221213033536_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,7 +25,8 @@ namespace CryptoApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CryptoApi.Models.Address", b =>
+            
+            modelBuilder.Entity("CryptoApi.Models.AddressTestNet", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +56,7 @@ namespace CryptoApi.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("ResponseAddress");
+                    b.ToTable("ResponseAddressTestNet");
                 });
 
             

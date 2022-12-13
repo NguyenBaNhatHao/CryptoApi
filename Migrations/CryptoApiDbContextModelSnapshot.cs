@@ -22,7 +22,8 @@ namespace CryptoApi.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CryptoApi.Models.Address", b =>
+            
+            modelBuilder.Entity("CryptoApi.Models.AddressTestNet", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +53,7 @@ namespace CryptoApi.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("ResponseAddress");
+                    b.ToTable("ResponseAddressTestNet");
                 });
 
             

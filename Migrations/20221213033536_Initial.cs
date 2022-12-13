@@ -12,7 +12,7 @@ namespace CryptoApi.Migrations
         {
             
             migrationBuilder.CreateTable(
-                name: "ResponseAddress",
+                name: "ResponseAddressTestNet",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -25,20 +25,22 @@ namespace CryptoApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ResponseAddress", x => x.id);
+                    table.PrimaryKey("PK_ResponseAddressTestNet", x => x.id);
                 });
 
+            
             
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-         
-            migrationBuilder.DropTable(
-                name: "ResponseAddress");
 
-         
+
+            migrationBuilder.DropTable(
+                name: "ResponseAddressTestNet");
+
+           
         }
     }
 }
