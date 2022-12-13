@@ -211,8 +211,6 @@ namespace CryptoApi.Controller
             var sendCoinDto = mapper.Map<SendCoin,SendCoinDTO>(sendCoin);
             var ApiKey = _configuration.GetValue<string>("ApiKey");
             var walletid = _configuration.GetValue<string>("walletid");
-            var defautAddress = _configuration.GetValue<string>("defautlAddress");
-            sendCoinDto.address = defautAddress;
             var SymbolCode = new SqlParameter("@SymbolCoin", sendCoin.currencycode);
             using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
                 cmd.CommandText = "sp_api_currencycode";
@@ -237,16 +235,35 @@ namespace CryptoApi.Controller
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
             httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
-            if((int)httpResponse.StatusCode == 201){
-                sendCoin.amount = sendCoinDto.data.item.amount;
-                sendCoin.note = sendCoinDto.data.item.note;
-                sendCoin.recipientAddress = sendCoinDto.data.item.recipientAddress;
-                _context.TransactionRequest.Add(sendCoin);
-                _context.SaveChanges();
-            }
+            // if((int)httpResponse.StatusCode == 201){
+            //     sendCoin.amount = sendCoinDto.data.item.amount;
+            //     sendCoin.note = sendCoinDto.data.item.note;
+            //     sendCoin.recipientAddress = sendCoinDto.data.item.recipientAddress;
+            //     _context.TransactionRequest.Add(sendCoin);
+            //     _context.SaveChanges();
+            // }
             var responseString = await httpResponse.Content.ReadAsStringAsync();
             Console.WriteLine(responseString);
             return Ok(responseString);              
+        }
+
+        [HttpGet("GetfungibleTokens")]
+        public async Task<ActionResult> GetToken (){
+            var ApiKey = _configuration.GetValue<string>("ApiKey");
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/all-assets";
+            _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
+            HttpResponseMessage httpResponse = _http.GetAsync(url).GetAwaiter().GetResult();
+            httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
+            // if((int)httpResponse.StatusCode == 201){
+            //     sendCoin.amount = sendCoinDto.data.item.amount;
+            //     sendCoin.note = sendCoinDto.data.item.note;
+            //     sendCoin.recipientAddress = sendCoinDto.data.item.recipientAddress;
+            //     _context.TransactionRequest.Add(sendCoin);
+            //     _context.SaveChanges();
+            // }
+            var responseString = await httpResponse.Content.ReadAsStringAsync();
+            Console.WriteLine(responseString);
+            return Ok(responseString);
         }
     }
 }
