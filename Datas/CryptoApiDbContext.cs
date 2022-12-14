@@ -11,5 +11,7 @@ namespace CryptoApi.Datas{
         public DbSet<Network> Network {get; set;}
         public DbSet<Address> ResponseAddress {get; set;}
         public DbSet<AddressTestNet> ResponseAddressTestNet {get; set;}
+        public DbSet<EnergyResutlTN> EnergyTN {get;set;}
+        public DbSet<SendTokenResutlTN> TokenTN {get; set;}
     }
 }

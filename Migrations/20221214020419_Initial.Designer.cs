@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoApi.Migrations
 {
     [DbContext(typeof(CryptoApiDbContext))]
-    [Migration("20221213033536_Initial")]
+    [Migration("20221214020419_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -26,7 +26,7 @@ namespace CryptoApi.Migrations
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             
-            modelBuilder.Entity("CryptoApi.Models.AddressTestNet", b =>
+            modelBuilder.Entity("CryptoApi.Models.EnergyResutlTN", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +38,7 @@ namespace CryptoApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("createdTimestamp")
+                    b.Property<string>("amount")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -46,17 +46,53 @@ namespace CryptoApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("email")
+                    b.Property<string>("resource")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("requestId")
+                    b.Property<string>("status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
-                    b.ToTable("ResponseAddressTestNet");
+                    b.ToTable("EnergyTN");
+                });
+
+            
+
+            modelBuilder.Entity("CryptoApi.Models.SendTokenResutlTN", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("SenderAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("amount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("currencycode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("recipientAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("transactionRequestId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TokenTN");
                 });
 
             

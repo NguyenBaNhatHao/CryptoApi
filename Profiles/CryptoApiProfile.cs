@@ -16,7 +16,7 @@ namespace CryptoApi.Profiles{
 
             CreateMap<Energy, EnergyDTO>()
             .ForMember(dest=>dest.blockchain, act=>act.MapFrom(src=>src.currencycode))
-            .ForMember(dest=>dest.data, act=>act.MapFrom(src=> new DataEnergy{item = new ItemEnergy{amount = src.amount, recipient = src.recipient, resource = src.resource}}));
+            .ForMember(dest=>dest.data, act=>act.MapFrom(src=> new DataEnergy{item = new ItemEnergy{recipient = src.recipient, resource = src.resource}}));
 
             CreateMap<SendToken, SendTokenDTO>()
             .ForMember(dest=>dest.blockchain, act=>act.MapFrom(src=>src.currencycode))

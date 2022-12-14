@@ -200,53 +200,7 @@ namespace CryptoApi.Controller
             return Ok(jsonData);                          
         }
 
-        [HttpPost("sendcoinTestNet")]
-        public async Task<ActionResult> SendCoin (SendCoin sendCoin){
-            Env.Load();
-            var config = new MapperConfiguration(cfg =>{
-                cfg.AddProfile(new CrytoApiProfile());
-            });
-            string network="";
-            var mapper = config.CreateMapper();
-            var sendCoinDto = mapper.Map<SendCoin,SendCoinDTO>(sendCoin);
-            var ApiKey = _configuration.GetValue<string>("ApiKey");
-            var walletid = _configuration.GetValue<string>("walletid");
-            var SymbolCode = new SqlParameter("@SymbolCoin", sendCoin.currencycode);
-            using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
-                cmd.CommandText = "sp_api_currencycode";
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                if (cmd.Connection.State != System.Data.ConnectionState.Open) cmd.Connection.Open();
-                cmd.Parameters.Add(SymbolCode);
-                var reader = cmd.ExecuteReader();
-                while(reader.Read()){
-                    if(sendCoinDto.blockchain.Equals(reader[2].ToString())){
-                        sendCoinDto.blockchain = reader[1].ToString();
-                        network = reader[3].ToString();
-                    }else{
-                        continue;
-                    }
-                }
-                cmd.Connection.Close();
-            }
-
-            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+sendCoinDto.blockchain+"/"+network+"/addresses/"+sendCoinDto.address+"/feeless-transaction-requests";
-            _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
-            string data = JsonConvert.SerializeObject(sendCoinDto);
-            HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
-            HttpResponseMessage httpResponse = _http.PostAsync(url, c).GetAwaiter().GetResult();
-            httpResponse.EnsureSuccessStatusCode(); // throws if not 200-299
-            // if((int)httpResponse.StatusCode == 201){
-            //     sendCoin.amount = sendCoinDto.data.item.amount;
-            //     sendCoin.note = sendCoinDto.data.item.note;
-            //     sendCoin.recipientAddress = sendCoinDto.data.item.recipientAddress;
-            //     _context.TransactionRequest.Add(sendCoin);
-            //     _context.SaveChanges();
-            // }
-            var responseString = await httpResponse.Content.ReadAsStringAsync();
-            Console.WriteLine(responseString);
-            return Ok(responseString);              
-        }
-
+        
         [HttpGet("GetfungibleTokens")]
         public async Task<ActionResult> GetToken (){
             var ApiKey = _configuration.GetValue<string>("ApiKey");
@@ -266,8 +220,12 @@ namespace CryptoApi.Controller
             return Ok(responseString);
         }
 
-        [HttpPost("freezetron")]
-        public async Task<ActionResult> FreezeTron (Energy energy){
+        
+
+        //send token bang main net
+
+        [HttpPost("FreezeTronMainnet")]
+        public async Task<ActionResult> FreezeTronMainNet (Energy energy){
             Env.Load();
             var config = new MapperConfiguration(cfg =>{
                 cfg.AddProfile(new CrytoApiProfile());
@@ -277,7 +235,9 @@ namespace CryptoApi.Controller
             var energyDto = mapper.Map<Energy,EnergyDTO>(energy);
             var ApiKey = _configuration.GetValue<string>("ApiKey");
             var walletid = _configuration.GetValue<string>("walletid");
-
+            var StoreTron = _configuration.GetValue<string>("StoreTron");
+            var Listnetwork = _configuration.GetSection("listNetWork");
+            network = Listnetwork.GetValue<string>("mainnet");
             var SymbolCode = new SqlParameter("@SymbolCoin", energy.currencycode);
             
             using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
@@ -289,7 +249,6 @@ namespace CryptoApi.Controller
                 while(reader.Read()){
                     if(energyDto.blockchain.Equals(reader[2].ToString())){
                         energyDto.blockchain = reader[1].ToString();
-                        network = reader[3].ToString();
                     }else{
                         continue;
                     }
@@ -297,7 +256,7 @@ namespace CryptoApi.Controller
                 cmd.Connection.Close();
             }
 
-            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+energyDto.blockchain+"/"+network+"/addresses/"+energy.sender+"/freeze";
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+energyDto.blockchain+"/"+network+"/addresses/"+StoreTron+"/freeze";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(energyDto);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
@@ -314,8 +273,9 @@ namespace CryptoApi.Controller
             Console.WriteLine(responseString);
             return Ok(responseString);              
         }
-        [HttpPost("sendtoken")]
-        public async Task<ActionResult> SendToken (SendToken sendToken){
+
+        [HttpPost("SendTokenMainNet")]
+        public async Task<ActionResult> SendTokenMainNet (SendToken sendToken){
             Env.Load();
             var config = new MapperConfiguration(cfg =>{
                 cfg.AddProfile(new CrytoApiProfile());
@@ -323,7 +283,8 @@ namespace CryptoApi.Controller
             string network="";
             var mapper = config.CreateMapper();
             var sendTokenDto = mapper.Map<SendToken,SendTokenDTO>(sendToken);
-            
+            var Listnetwork = _configuration.GetSection("listNetWork");
+            network = Listnetwork.GetValue<string>("mainnet");
             var ApiKey = _configuration.GetValue<string>("ApiKey");
             var walletid = _configuration.GetValue<string>("walletid");
             var tokenIdentifier = _configuration.GetValue<string>("identifierToken");
@@ -343,7 +304,6 @@ namespace CryptoApi.Controller
                 while(reader.Read()){
                     if(sendTokenDto.blockchain.Equals(reader[2].ToString())){
                         sendTokenDto.blockchain = reader[1].ToString();
-                        network = reader[3].ToString();
                     }else{
                         continue;
                     }
