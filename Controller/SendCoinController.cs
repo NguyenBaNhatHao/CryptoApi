@@ -38,6 +38,7 @@ namespace CryptoApi.Controller{
             var mapper = config.CreateMapper();
             var sendCoinDto = mapper.Map<SendCoin,SendCoinDTO>(sendCoin);
             var ApiKey = _configuration.GetValue<string>("ApiKey");
+            var StoreTron = _configuration.GetValue<string>("StoreTron");
             var walletid = _configuration.GetValue<string>("walletid");
             var SymbolCode = new SqlParameter("@SymbolCoin", sendCoin.currencycode);
             using (var cmd = _context.Database.GetDbConnection().CreateCommand()) {
@@ -57,7 +58,7 @@ namespace CryptoApi.Controller{
                 cmd.Connection.Close();
             }
 
-            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+sendCoinDto.blockchain+"/"+network+"/addresses/"+sendCoinDto.address+"/feeless-transaction-requests";
+            string url = "https://rest.cryptoapis.io/wallet-as-a-service/wallets/"+walletid+"/"+sendCoinDto.blockchain+"/"+network+"/addresses/"+StoreTron+"/feeless-transaction-requests";
             _http.DefaultRequestHeaders.Add("X-API-Key",ApiKey);
             string data = JsonConvert.SerializeObject(sendCoinDto);
             HttpContent c = new StringContent(data, Encoding.UTF8, "application/json");
