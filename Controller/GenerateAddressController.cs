@@ -38,10 +38,8 @@ namespace CryptoApi.Controller
             string network="";
             var ApiKey = _configuration.GetValue<string>("ApiKey");
             var walletid = _configuration.GetValue<string>("walletid");
-            // var Listnetwork = _configuration.GetSection("listNetWork");
-            // if(address.currencycode == "BTC"){
-            //     network = Listnetwork.GetValue<string>("testnet");
-            // }
+            var Listnetwork = _configuration.GetSection("listNetWork");
+            network = Listnetwork.GetValue<string>("mainnet");
             var SymbolCode = new SqlParameter("@SymbolCoin", address.currencycode);
             var addressDTO = mapper.Map<AddressParameter,AddressDTO>(address);
             
@@ -55,7 +53,7 @@ namespace CryptoApi.Controller
                     if(addressDTO.blockchain.Equals(reader[2].ToString())){
                         addressDTO.blockchain = reader[1].ToString();
                         //chay NETWORK TESTNET
-                        network = reader[3].ToString();
+                        // network = reader[3].ToString();
                     }else{
                         continue;
                     }

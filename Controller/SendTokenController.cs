@@ -38,6 +38,8 @@ namespace CryptoApi.Controller{
             var mapper = config.CreateMapper();
             var sendTokenDto = mapper.Map<SendToken,SendTokenDTO>(sendToken);
 
+            var Listnetwork = _configuration.GetSection("listNetWork");
+            network = Listnetwork.GetValue<string>("mainnet");
             var ApiKey = _configuration.GetValue<string>("ApiKey");
             var walletid = _configuration.GetValue<string>("walletid");
             var tokenIdentifier = _configuration.GetValue<string>("identifierToken");
@@ -59,7 +61,7 @@ namespace CryptoApi.Controller{
                 while(reader.Read()){
                     if(sendTokenDto.blockchain.Equals(reader[2].ToString())){
                         sendTokenDto.blockchain = reader[1].ToString();
-                        network = reader[3].ToString();
+                        // network = reader[3].ToString();
                     }else{
                         continue;
                     }
